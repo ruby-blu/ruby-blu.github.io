@@ -13,7 +13,7 @@ website:
     left: "Ruby-blu 2024©"
     right: 
       - icon: linkedin
-        href: https://www.linkedin.com/in/rubyhigdon/
+        href: https://www.linkedin.com/in/rubyhigdon
 
   navbar:
     background: primary
