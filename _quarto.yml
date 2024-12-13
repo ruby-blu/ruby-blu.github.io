@@ -2,18 +2,18 @@ project:
   type: website
 
 website:
-  title: "Your_Name - Data Science Portfolio"
+  title: "Ruby Higdon - Data Science Portfolio"
   favicon: Images/favicon.png
   back-to-top-navigation: true
-  repo-url: https://github.com/username/username.github.io
+  repo-url: https://github.com/username/ruby-blu.github.io
   #repo-actions: [issue] #if you want to allow others to report issues on your site uncomment this line
 
   page-footer: 
     border: true
-    left: "Your_Name 2024©"
+    left: "Ruby-blu 2024©"
     right: 
       - icon: linkedin
-        href: Your_LinkedIn_URL
+        href: https://www.linkedin.com/in/rubyhigdon/
 
   navbar:
     background: primary
@@ -176,7 +176,7 @@ website:
 format:  
   html:
     theme: #see this link to customize the theme with css (https://quarto.org/docs/output-formats/html-themes.html#dark-mode)
-      light: flatly # more themes can be found [here](https://quarto.org/docs/output-formats/html-themes.html)
+      light: lux # more themes can be found [here](https://quarto.org/docs/output-formats/html-themes.html)
       dark: darkly
       #light: cosmo
       #dark: [cosmo, theme-dark.scss]
