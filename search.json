@@ -34,176 +34,268 @@
     "text": "Paste in a template\n\n\n\n\n Back to top"
   },
   {
-    "objectID": "full_stack.html",
-    "href": "full_stack.html",
-    "title": "about me",
+    "objectID": "notebooks/Exploration_04.html",
+    "href": "notebooks/Exploration_04.html",
+    "title": "Data Exploration 04",
     "section": "",
-    "text": "MarkDown Basics",
-    "crumbs": [
-      "Full Stack"
-    ]
+    "text": "You’re working with a team of botanists to develop a flower classification system.\nYour assignment is to build a k-Nearest Neighbors model to classify flowers based on their petal and sepal sizes."
   },
   {
-    "objectID": "full_stack.html#title-2-header",
-    "href": "full_stack.html#title-2-header",
-    "title": "about me",
-    "section": "",
-    "text": "MarkDown Basics",
-    "crumbs": [
-      "Full Stack"
-    ]
+    "objectID": "notebooks/Exploration_04.html#part-a-import-and-explore-the-data",
+    "href": "notebooks/Exploration_04.html#part-a-import-and-explore-the-data",
+    "title": "Data Exploration 04",
+    "section": "Part A: Import and Explore the data",
+    "text": "Part A: Import and Explore the data\nThe dataset for this exploration is stored at the following url:\nhttps://raw.githubusercontent.com/byui-cse/cse450-course/master/data/iris.csv\n\nInitial Data Analysis\nOnce you’ve loaded the data, it’s a good idea to poke around a little bit to find out what you’re dealing with.\nSome questions you might ask include:\n\nWhat does the data look like?\nWhat kind of data is in each column?\nDo any of the columns have missing values?\n\n\nimport pandas as pd\niris = pd.read_csv('https://raw.githubusercontent.com/byui-cse/cse450-course/master/data/iris.csv')\n\n\niris.head()\n\n\n  \n    \n\n\n\n\n\n\nsepal_length\nsepal_width\npetal_length\npetal_width\nspecies\n\n\n\n\n0\n5.1\n3.5\n1.4\n0.2\nIris-setosa\n\n\n1\n4.9\n3.0\n1.4\n0.2\nIris-setosa\n\n\n2\n4.7\n3.2\n1.3\n0.2\nIris-setosa\n\n\n3\n4.6\n3.1\n1.5\n0.2\nIris-setosa\n\n\n4\n5.0\n3.6\n1.4\n0.2\nIris-setosa\n\n\n\n\n\n    \n\n  \n    \n\n  \n    \n  \n    \n\n  \n\n    \n  \n\n\n\n  \n\n\n    \n        \n    \n\n  \n\n\n\n  \n\n\n    \n  \n\n\n\niris.info()\n\n&lt;class 'pandas.core.frame.DataFrame'&gt;\nRangeIndex: 150 entries, 0 to 149\nData columns (total 5 columns):\n #   Column        Non-Null Count  Dtype  \n---  ------        --------------  -----  \n 0   sepal_length  150 non-null    float64\n 1   sepal_width   150 non-null    float64\n 2   petal_length  150 non-null    float64\n 3   petal_width   150 non-null    float64\n 4   species       150 non-null    object \ndtypes: float64(4), object(1)\nmemory usage: 6.0+ KB"
   },
   {
-    "objectID": "Competition/project1.html",
-    "href": "Competition/project1.html",
+    "objectID": "notebooks/Exploration_04.html#part-b-visualize-the-data",
+    "href": "notebooks/Exploration_04.html#part-b-visualize-the-data",
+    "title": "Data Exploration 04",
+    "section": "Part B: Visualize the Data",
+    "text": "Part B: Visualize the Data\nUse your preferred visualization library to create a scatterplot showing petal length vs petal width. You should plot each flower species as a different color on the scatter plot.\n\nimport seaborn as sns\npetal_plot = sns.scatterplot(data=iris, x='petal_length', y='sepal_length', hue='species')"
+  },
+  {
+    "objectID": "notebooks/Exploration_04.html#part-c-prepare-the-data-for-machine-learning",
+    "href": "notebooks/Exploration_04.html#part-c-prepare-the-data-for-machine-learning",
+    "title": "Data Exploration 04",
+    "section": "Part C: Prepare the Data for Machine Learning",
+    "text": "Part C: Prepare the Data for Machine Learning\nData preparation (sometimes called “data wrangling” or “data munging”) is where you’ll usually spend the bulk of your time when working on machine learning problems. Only rarely is data already in the optimal form for a given algorithm.\nOften we have to deal with missing values, normalize the data, and perform both simple and complex feature engineering to get the data into the form we need.\nOnce the data is in the correct form, we can then randomize the data and split it into training and test datasets (and sometimes an additional validation dataset).\n\nMachine Learning Steps\nAlmost universally, regardless of which algorithm or type of task we’re performing, building and evaluating a machine learning model with sklearn follows these steps:\n\nPerform any data preprocessing needed.\nPartition the data into features and targets.\nSplit the data into training and test sets (and sometimes a third validation set).\nCreate a configure whichever sklearn model object we’re using.\nTrain the model using its “fit” method.\nTest the model using its “predict” method.\nUse a model evaluation metric to see how well the model performs.\n\nIf the model isn’t performing well, we will repeat one or more of the above steps (sometimes all of them).\nOnce the model is performing adequately, we’ll deploy it for use as part of some larger system.\nFor now, let’s assume that this dataset is in the form we need, and we’ll skip to step 2, partitioning the data.\n\n\nStep 2. Partition the Data into Features and Targets\nFirst, we’ll create a dataframe called “X” containing the features of the data we want to use to make our predictions. In this case, that will be the sepal_length, sepal_width, petal_length, and petal_width features.\n(The name “X” isn’t special, but uppercase X is the conventional name for our feature dataset, because that’s what statisticians use to refer to a matrix of independent variables)\n\n# Create a new dataframe called X that contians the features we're going\n# to use to make predictions\nX = iris[['sepal_width', 'petal_length']]\n\nNext we’ll create a dataframe called “y” containing the target variable, or the set of values we want to predict. In this case, that will be species.\n(Once again, the name “y” isn’t special, but lowercase y is the conventional name for a list of targets, because that’s what statisticians use to refer to a vector of dependent variables)\n\n# Create a new dataframe called y that contians the target we're\n# trying to predict\ny = iris['species']\n\n\n\nStep 3. Split the data into training and test sets.\nNow that we have our data divided into features (X) and target values (y), we’ll split each of these into a training set and a test set.\nWe’ll use the training sets to “train” our model how to make predictions.\nWe’ll then use our test sets to test how well our model has learned from the training data.\nWhile we could use a bunch of python code to do this step, the sklearn library has lots of built-in functions to handle common data manipulations related to machine learning.\nFor this step, we’ll use the train_test_split() function.\n\n# Import and use the train_test_split() function to split the X and y\n# dataframes into training and test sets.\nfrom sklearn.model_selection import train_test_split\n# The training data should contain 80% of the samples and\n# the test data should contain 20% of the samples.\nX_train, X_test, y_train, y_test = train_test_split(X, y, test_size=0.2)\n\nAfter creating the training and test splits, output the head() of each one and notice how they row numbers have been randomized.\nAlso notice that X_train and y_train’s row numbers match up, as do X_test and y_test’s row numbers.\n\nX_train.head()\n\n\n  \n    \n\n\n\n\n\n\nsepal_length\nsepal_width\npetal_length\npetal_width\n\n\n\n\n27\n5.2\n3.5\n1.5\n0.2\n\n\n132\n6.4\n2.8\n5.6\n2.2\n\n\n112\n6.8\n3.0\n5.5\n2.1\n\n\n37\n4.9\n3.1\n1.5\n0.1\n\n\n0\n5.1\n3.5\n1.4\n0.2\n\n\n\n\n\n    \n\n  \n    \n\n  \n    \n  \n    \n\n  \n\n    \n  \n\n\n\n  \n\n\n    \n        \n    \n\n  \n\n\n\n  \n\n\n    \n  \n\n\n\nX_test.head()\n\n\n  \n    \n\n\n\n\n\n\nsepal_length\nsepal_width\npetal_length\npetal_width\n\n\n\n\n106\n4.9\n2.5\n4.5\n1.7\n\n\n33\n5.5\n4.2\n1.4\n0.2\n\n\n49\n5.0\n3.3\n1.4\n0.2\n\n\n65\n6.7\n3.1\n4.4\n1.4\n\n\n28\n5.2\n3.4\n1.4\n0.2\n\n\n\n\n\n    \n\n  \n    \n\n  \n    \n  \n    \n\n  \n\n    \n  \n\n\n\n  \n\n\n    \n        \n    \n\n  \n\n\n\n  \n\n\n    \n  \n\n\n\ny_train.head()\n\n\n\n\n\n\n\n\nspecies\n\n\n\n\n27\nIris-setosa\n\n\n132\nIris-virginica\n\n\n112\nIris-virginica\n\n\n37\nIris-setosa\n\n\n0\nIris-setosa\n\n\n\n\ndtype: object\n\n\n\ny_test.head()\n\n\n\n\n\n\n\n\nspecies\n\n\n\n\n106\nIris-virginica\n\n\n33\nIris-setosa\n\n\n49\nIris-setosa\n\n\n65\nIris-versicolor\n\n\n28\nIris-setosa\n\n\n\n\ndtype: object"
+  },
+  {
+    "objectID": "notebooks/Exploration_04.html#part-d-create-and-train-a-model",
+    "href": "notebooks/Exploration_04.html#part-d-create-and-train-a-model",
+    "title": "Data Exploration 04",
+    "section": "Part D: Create and Train a Model",
+    "text": "Part D: Create and Train a Model\nWe’re going to create a model based on the k-Nearest Neighbors algorithm.\nSince this is a classification task, (we’re trying to classify which species a given flower belongs to), we’ll use sklearn’s KNeighborsClassifer.\n\nStep 4. Create and configure the model\nWe start by importing the information about the model we want to create. In python, this information is called a class.\nThe KNeighborsClassifier class contains all of the information python needs to create a kNN Classifier.\nOnce we’ve imported the class, we’ll create an instance of the class using this syntax:\nwhatever = ClassName( parameter_one = value, parameter_two = something_else, etc...)\nIn our case, the class name is KNeighborsClassifer. It doesn’t matter what we call the variable that holds the instance, but one popular convention is to call classifier instances clf, so that’s what you’ll see in the sklearn documentation.\nThe only parameter we want to configure is the n_neighbors parameter, which controls the value of k in the kNN algorithm.\n\n# Import the KNeighborsClassifier class from sklearn\n# Note that it's in the neighbors submodule. See the example code in the\n# documentation for details on how to import it\nfrom sklearn.neighbors import KNeighborsClassifier\n\n\n# Create an instance of the model, configuring it to use the 3 nearest neighbors\n# store the instance in a variable\nclf = KNeighborsClassifier(n_neighbors=3)\n\n\n\nStep 5: Train the model\nNext we’ll train the model. We do this by providing it with the training data we split off from the dataset in step 3.\nThe model “learns” how to associate the feature values (X) with the targets (y). The exact process it uses to learn how to do this depends on which algorithm we’re using.\nSometimes, this is called “fitting the data to the model”, so in sklearn, we perform this step using the fit() method.\n\n# Call the \"fit\" method of the classifier instance we created in step 4.\n# Pass it the X_train and y_train data so that it can learn to make predictions\nclf.fit(X_train, y_train)\n\nKNeighborsClassifier(n_neighbors=3)In a Jupyter environment, please rerun this cell to show the HTML representation or trust the notebook. On GitHub, the HTML representation is unable to render, please try loading this page with nbviewer.org.KNeighborsClassifier?Documentation for KNeighborsClassifieriFittedKNeighborsClassifier(n_neighbors=3)"
+  },
+  {
+    "objectID": "notebooks/Exploration_04.html#part-e-make-predictions-and-evaluate-the-model",
+    "href": "notebooks/Exploration_04.html#part-e-make-predictions-and-evaluate-the-model",
+    "title": "Data Exploration 04",
+    "section": "Part E: Make Predictions and Evaluate the Model",
+    "text": "Part E: Make Predictions and Evaluate the Model\nNow that the model has been created and trained, we can use it to make predictions. Since this is a classification model, when we give it a set of features, it tells us what the most likely target value is.\nIn this case, we tell the model “here are the values for petal width, petal length, sepal width, and sepal length for a particular flower” The model then tells us which species is the most likely for that flower.\nWhen testing how well our model works, we’ll use the test data we split off earlier. It contains the measurements for several flowers, along with their species.\n\nStep 6: Make Predictions on Test Data\nWe’ll give the measurements of each flower to the model and have it predict their species. We’ll then compare those predictions to the known values to determine how accurate our model is.\nSince this is a classification model, there are two different methods we can use to make predictions:\n\npredict(), which returns the most likely prediction for each sample.\npredict_proba() which returns a list of probabilities for each sample. The probabilities tell us how confident the model is that the corresponding sample belongs to a particular class.\n\n\n# Use the predict() method to get a list of predictions for the samples in our\n# test data. Then output those predictions\ntest_pred = clf.predict(X_test)\ntest_pred\n\narray(['Iris-setosa', 'Iris-virginica', 'Iris-versicolor',\n       'Iris-versicolor', 'Iris-setosa', 'Iris-setosa', 'Iris-versicolor',\n       'Iris-versicolor', 'Iris-virginica', 'Iris-virginica',\n       'Iris-setosa', 'Iris-setosa', 'Iris-setosa', 'Iris-virginica',\n       'Iris-versicolor', 'Iris-versicolor', 'Iris-setosa',\n       'Iris-virginica', 'Iris-versicolor', 'Iris-setosa',\n       'Iris-versicolor', 'Iris-versicolor', 'Iris-virginica',\n       'Iris-setosa', 'Iris-virginica', 'Iris-setosa', 'Iris-versicolor',\n       'Iris-virginica', 'Iris-versicolor', 'Iris-virginica'],\n      dtype=object)\n\n\n\n# Just a quick comparison with y_test to see if they match up\ny_test\n\n\n\n\n\n\n\n\nspecies\n\n\n\n\n108\nIris-virginica\n\n\n75\nIris-versicolor\n\n\n70\nIris-versicolor\n\n\n26\nIris-setosa\n\n\n132\nIris-virginica\n\n\n107\nIris-virginica\n\n\n99\nIris-versicolor\n\n\n18\nIris-setosa\n\n\n86\nIris-versicolor\n\n\n114\nIris-virginica\n\n\n51\nIris-versicolor\n\n\n123\nIris-virginica\n\n\n102\nIris-virginica\n\n\n115\nIris-virginica\n\n\n53\nIris-versicolor\n\n\n85\nIris-versicolor\n\n\n22\nIris-setosa\n\n\n72\nIris-versicolor\n\n\n56\nIris-versicolor\n\n\n57\nIris-versicolor\n\n\n29\nIris-setosa\n\n\n4\nIris-setosa\n\n\n81\nIris-versicolor\n\n\n101\nIris-virginica\n\n\n62\nIris-versicolor\n\n\n120\nIris-virginica\n\n\n82\nIris-versicolor\n\n\n79\nIris-versicolor\n\n\n122\nIris-virginica\n\n\n6\nIris-setosa\n\n\n\n\ndtype: object\n\n\n\n\nStep 7: Evaluate the Model\nThere are several metrics we can use to determine how well our model is performing.\nMost of them are in the sklearn.metrics library.\nMost of the sklearn metric function work using the same pattern. We import the function, then give it a list of the true values for our test data, and a list of the values the model predicted for our test data. The metric then outputs the value. How we interpret that value will depend on the exact problem we’re solving, the qualities of our data, and the particular metric we’re using.\n\nAccuracy\nSince this is a multiclass classification problem (“multiclass” means we have more than two options we’re choosing from), we can get a quick estimate from the accuracy_score() function, which tells us the percent of correct predictions made by the model.\n\n# Import the accuracy_score function and use it to determine\n# how accurate the models predictions were for our test data\nfrom sklearn.metrics import accuracy_score\naccuracy_score(y_test, test_pred)\n\n1.0\n\n\n\n\nConfusion Matrix\nWhile the accuracy score tells us a little about the model’s performance, it doesn’t tell us much.\nFor example, we know how often the model was correct, but we don’t know when it was wrong or why.\nWe can get this information from the confusion_matrix function.\n\n# Import the confusion_matrix function and use it to generate a confusion\n# matrix of our model results.\nfrom sklearn.metrics import confusion_matrix\ncm = confusion_matrix(y_test, test_pred)\n\n\n\nConfusion Matrix Plot\nIt’s easier to see the results of the confusion matrix if we plot the results. One way to do this is with Seaborn’s heatmap function.\nThis function works a little bit differently than the others. It takes as parameters your model instance, and then options for making the chart display the way you want, and outputs a confusion matrix showing how well the model did in predicting the target values.\nYou’ll notice that in many cases (including this one), the numbers in the confusion matrix will be the same as the results you see from the confusion_matrix() function above, but the plot makes it easier to interpret the results.\nWhen using the confusion matrix, you may find that the default color mapping is difficult to read. The “Blues” mapping is a popular choice.\n\n# Create a Seaborn heatmap\nimport seaborn as sns\nimport numpy as np\nunique_labels = np.unique(y_test)\nsns.heatmap(cm, annot=True, cmap='Blues', xticklabels=unique_labels, yticklabels=unique_labels)"
+  },
+  {
+    "objectID": "notebooks/Exploration_04.html#above-and-beyond",
+    "href": "notebooks/Exploration_04.html#above-and-beyond",
+    "title": "Data Exploration 04",
+    "section": "🌟 Above and Beyond 🌟",
+    "text": "🌟 Above and Beyond 🌟\nOnce you’ve complted the basics, try to complete one or more of the following tasks:\n\nSee if you can get better results from your model through some data preprocessing, such as normalization.\nOften, using too many features can give poor results. Can you get better performance using a subset of the features instead of all four?\nAre there other ways you could visualize your model results?"
+  },
+  {
+    "objectID": "Competition/project2.html",
+    "href": "Competition/project2.html",
     "title": "Client Report - [Insert Project Title]",
     "section": "",
     "text": "Paste in a template\n\n\n\n\n Back to top",
     "crumbs": [
       "Competition",
-      "Project 1"
-    ]
-  },
-  {
-    "objectID": "Competition/project3.html",
-    "href": "Competition/project3.html",
-    "title": "Client Report - [Insert Project Title]",
-    "section": "",
-    "text": "Paste in a template\n\n\n\n\n Back to top",
-    "crumbs": [
-      "Competition",
-      "Project 3"
-    ]
-  },
-  {
-    "objectID": "story_telling.html",
-    "href": "story_telling.html",
-    "title": "about me",
-    "section": "",
-    "text": "MarkDown Basics",
-    "crumbs": [
-      "Story Telling"
-    ]
-  },
-  {
-    "objectID": "story_telling.html#title-2-header",
-    "href": "story_telling.html#title-2-header",
-    "title": "about me",
-    "section": "",
-    "text": "MarkDown Basics",
-    "crumbs": [
-      "Story Telling"
-    ]
-  },
-  {
-    "objectID": "index.html",
-    "href": "index.html",
-    "title": "about me",
-    "section": "",
-    "text": "MarkDown Basics"
-  },
-  {
-    "objectID": "index.html#title-2-header",
-    "href": "index.html#title-2-header",
-    "title": "about me",
-    "section": "",
-    "text": "MarkDown Basics"
-  },
-  {
-    "objectID": "Full_Stack/project1.html",
-    "href": "Full_Stack/project1.html",
-    "title": "Client Report - [Insert Project Title]",
-    "section": "",
-    "text": "Paste in a template\n\n\n\n\n Back to top",
-    "crumbs": [
-      "Full Stack",
-      "Project 1"
-    ]
-  },
-  {
-    "objectID": "Full_Stack/project3.html",
-    "href": "Full_Stack/project3.html",
-    "title": "Client Report - [Insert Project Title]",
-    "section": "",
-    "text": "Paste in a template\n\n\n\n\n Back to top",
-    "crumbs": [
-      "Full Stack",
-      "Project 3"
-    ]
-  },
-  {
-    "objectID": "Story_Telling/project2.html",
-    "href": "Story_Telling/project2.html",
-    "title": "Client Report - [Insert Project Title]",
-    "section": "",
-    "text": "Paste in a template\n\n\n\n\n Back to top",
-    "crumbs": [
-      "Story Telling",
       "Project 2"
     ]
   },
   {
-    "objectID": "Story_Telling/project4.html",
-    "href": "Story_Telling/project4.html",
+    "objectID": "Competition/project4.html",
+    "href": "Competition/project4.html",
     "title": "Client Report - [Insert Project Title]",
     "section": "",
     "text": "Paste in a template\n\n\n\n\n Back to top",
     "crumbs": [
-      "Story Telling",
+      "Competition",
       "Project 4"
     ]
   },
   {
-    "objectID": "Story_Telling/project5.html",
-    "href": "Story_Telling/project5.html",
+    "objectID": "Competition/project5.html",
+    "href": "Competition/project5.html",
+    "title": "Client Report - [Insert Project Title]",
+    "section": "",
+    "text": "Paste in a template\n\n\n\n\n Back to top",
+    "crumbs": [
+      "Competition",
+      "Project 5"
+    ]
+  },
+  {
+    "objectID": "competition.html",
+    "href": "competition.html",
+    "title": "about me",
+    "section": "",
+    "text": "MarkDown Basics",
+    "crumbs": [
+      "Competition"
+    ]
+  },
+  {
+    "objectID": "competition.html#title-2-header",
+    "href": "competition.html#title-2-header",
+    "title": "about me",
+    "section": "",
+    "text": "MarkDown Basics",
+    "crumbs": [
+      "Competition"
+    ]
+  },
+  {
+    "objectID": "Full_Stack/project2.html",
+    "href": "Full_Stack/project2.html",
+    "title": "Client Report - [Insert Project Title]",
+    "section": "",
+    "text": "Paste in a template\n\n\n\n\n Back to top",
+    "crumbs": [
+      "Full Stack",
+      "Project 2"
+    ]
+  },
+  {
+    "objectID": "Full_Stack/project4.html",
+    "href": "Full_Stack/project4.html",
+    "title": "Client Report - [Insert Project Title]",
+    "section": "",
+    "text": "Paste in a template\n\n\n\n\n Back to top",
+    "crumbs": [
+      "Full Stack",
+      "Project 4"
+    ]
+  },
+  {
+    "objectID": "Full_Stack/project5.html",
+    "href": "Full_Stack/project5.html",
+    "title": "Client Report - [Insert Project Title]",
+    "section": "",
+    "text": "Paste in a template\n\n\n\n\n Back to top",
+    "crumbs": [
+      "Full Stack",
+      "Project 5"
+    ]
+  },
+  {
+    "objectID": "Story_Telling/project1.html",
+    "href": "Story_Telling/project1.html",
     "title": "Client Report - [Insert Project Title]",
     "section": "",
     "text": "Paste in a template\n\n\n\n\n Back to top",
     "crumbs": [
       "Story Telling",
-      "Project 5"
-    ]
-  },
-  {
-    "objectID": "Cleansing_Projects/project1.html",
-    "href": "Cleansing_Projects/project1.html",
-    "title": "Client Report - [Insert Project Title]",
-    "section": "",
-    "text": "Paste in a template\n\n\n\n\n Back to top",
-    "crumbs": [
-      "Data Cleansing",
       "Project 1"
     ]
   },
   {
-    "objectID": "Cleansing_Projects/project3.html",
-    "href": "Cleansing_Projects/project3.html",
+    "objectID": "Story_Telling/project3.html",
+    "href": "Story_Telling/project3.html",
+    "title": "Client Report - [Insert Project Title]",
+    "section": "",
+    "text": "Paste in a template\n\n\n\n\n Back to top",
+    "crumbs": [
+      "Story Telling",
+      "Project 3"
+    ]
+  },
+  {
+    "objectID": "Cleansing_Projects/project2.html",
+    "href": "Cleansing_Projects/project2.html",
     "title": "Client Report - [Insert Project Title]",
     "section": "",
     "text": "Paste in a template\n\n\n\n\n Back to top",
     "crumbs": [
       "Data Cleansing",
+      "Project 2"
+    ]
+  },
+  {
+    "objectID": "Cleansing_Projects/project4.html",
+    "href": "Cleansing_Projects/project4.html",
+    "title": "Client Report - [Insert Project Title]",
+    "section": "",
+    "text": "Paste in a template\n\n\n\n\n Back to top",
+    "crumbs": [
+      "Data Cleansing",
+      "Project 4"
+    ]
+  },
+  {
+    "objectID": "Cleansing_Projects/project5.html",
+    "href": "Cleansing_Projects/project5.html",
+    "title": "Client Report - [Insert Project Title]",
+    "section": "",
+    "text": "Paste in a template\n\n\n\n\n Back to top",
+    "crumbs": [
+      "Data Cleansing",
+      "Project 5"
+    ]
+  },
+  {
+    "objectID": "cleansing.html",
+    "href": "cleansing.html",
+    "title": "about me",
+    "section": "",
+    "text": "MarkDown Basics",
+    "crumbs": [
+      "Data Cleansing"
+    ]
+  },
+  {
+    "objectID": "cleansing.html#title-2-header",
+    "href": "cleansing.html#title-2-header",
+    "title": "about me",
+    "section": "",
+    "text": "MarkDown Basics",
+    "crumbs": [
+      "Data Cleansing"
+    ]
+  },
+  {
+    "objectID": "Machine_Learning/project2.html",
+    "href": "Machine_Learning/project2.html",
+    "title": "Client Report - [Insert Project Title]",
+    "section": "",
+    "text": "Paste in a template\n\n\n\n\n Back to top",
+    "crumbs": [
+      "Machine Learning",
+      "Project 2"
+    ]
+  },
+  {
+    "objectID": "Machine_Learning/project4.html",
+    "href": "Machine_Learning/project4.html",
+    "title": "Client Report - [Insert Project Title]",
+    "section": "",
+    "text": "Paste in a template\n\n\n\n\n Back to top",
+    "crumbs": [
+      "Machine Learning",
+      "Project 4"
+    ]
+  },
+  {
+    "objectID": "Machine_Learning/project5.html",
+    "href": "Machine_Learning/project5.html",
+    "title": "Client Report - [Insert Project Title]",
+    "section": "",
+    "text": "Paste in a template\n\n\n\n\n Back to top",
+    "crumbs": [
+      "Machine Learning",
+      "Project 5"
+    ]
+  },
+  {
+    "objectID": "Machine_Learning/project3.html",
+    "href": "Machine_Learning/project3.html",
+    "title": "Client Report - [Insert Project Title]",
+    "section": "",
+    "text": "Paste in a template\n\n\n\n\n Back to top",
+    "crumbs": [
+      "Machine Learning",
       "Project 3"
     ]
   },
   {
-    "objectID": "ml.html",
-    "href": "ml.html",
-    "title": "about me",
+    "objectID": "Machine_Learning/project1.html",
+    "href": "Machine_Learning/project1.html",
+    "title": "Client Report - [Insert Project Title]",
     "section": "",
-    "text": "MarkDown Basics",
+    "text": "Paste in a template\n\n\n\n\n Back to top",
     "crumbs": [
-      "Machine Learning"
-    ]
-  },
-  {
-    "objectID": "ml.html#title-2-header",
-    "href": "ml.html#title-2-header",
-    "title": "about me",
-    "section": "",
-    "text": "MarkDown Basics",
-    "crumbs": [
-      "Machine Learning"
+      "Machine Learning",
+      "Project 1"
     ]
   },
   {
@@ -235,219 +327,176 @@
     "text": "Additional Relevant Information\n\nMissionary Service\nNew Mexico Albuquerque Mission | February 2021 - July 2022\n\nServed a full-time Spanish-speaking mission for the Church of Jesus Christ of Latter-day Saints\nTrained missionaries and members of local congregations as a Social Media Specialist\n\n\n\nSpanish Language\n\nEarned Seal of Biliteracy in the state of Oregon\nSeven years in Spanish immersion from K-6, three years of advanced-level high school courses, and two colleges classes\nTaught in Spanish-speaking congregations throughout missionary service"
   },
   {
-    "objectID": "Machine_Learning/project1.html",
-    "href": "Machine_Learning/project1.html",
-    "title": "Client Report - [Insert Project Title]",
+    "objectID": "ml.html",
+    "href": "ml.html",
+    "title": "about me",
     "section": "",
-    "text": "Paste in a template\n\n\n\n\n Back to top",
+    "text": "MarkDown Basics",
     "crumbs": [
-      "Machine Learning",
-      "Project 1"
+      "Machine Learning"
     ]
   },
   {
-    "objectID": "Machine_Learning/project3.html",
-    "href": "Machine_Learning/project3.html",
+    "objectID": "ml.html#title-2-header",
+    "href": "ml.html#title-2-header",
+    "title": "about me",
+    "section": "",
+    "text": "MarkDown Basics",
+    "crumbs": [
+      "Machine Learning"
+    ]
+  },
+  {
+    "objectID": "Cleansing_Projects/project3.html",
+    "href": "Cleansing_Projects/project3.html",
     "title": "Client Report - [Insert Project Title]",
     "section": "",
     "text": "Paste in a template\n\n\n\n\n Back to top",
     "crumbs": [
-      "Machine Learning",
+      "Data Cleansing",
       "Project 3"
     ]
   },
   {
-    "objectID": "Machine_Learning/project5.html",
-    "href": "Machine_Learning/project5.html",
-    "title": "Client Report - [Insert Project Title]",
-    "section": "",
-    "text": "Paste in a template\n\n\n\n\n Back to top",
-    "crumbs": [
-      "Machine Learning",
-      "Project 5"
-    ]
-  },
-  {
-    "objectID": "Machine_Learning/project4.html",
-    "href": "Machine_Learning/project4.html",
-    "title": "Client Report - [Insert Project Title]",
-    "section": "",
-    "text": "Paste in a template\n\n\n\n\n Back to top",
-    "crumbs": [
-      "Machine Learning",
-      "Project 4"
-    ]
-  },
-  {
-    "objectID": "Machine_Learning/project2.html",
-    "href": "Machine_Learning/project2.html",
-    "title": "Client Report - [Insert Project Title]",
-    "section": "",
-    "text": "Paste in a template\n\n\n\n\n Back to top",
-    "crumbs": [
-      "Machine Learning",
-      "Project 2"
-    ]
-  },
-  {
-    "objectID": "cleansing.html",
-    "href": "cleansing.html",
-    "title": "about me",
-    "section": "",
-    "text": "MarkDown Basics",
-    "crumbs": [
-      "Data Cleansing"
-    ]
-  },
-  {
-    "objectID": "cleansing.html#title-2-header",
-    "href": "cleansing.html#title-2-header",
-    "title": "about me",
-    "section": "",
-    "text": "MarkDown Basics",
-    "crumbs": [
-      "Data Cleansing"
-    ]
-  },
-  {
-    "objectID": "Cleansing_Projects/project5.html",
-    "href": "Cleansing_Projects/project5.html",
+    "objectID": "Cleansing_Projects/project1.html",
+    "href": "Cleansing_Projects/project1.html",
     "title": "Client Report - [Insert Project Title]",
     "section": "",
     "text": "Paste in a template\n\n\n\n\n Back to top",
     "crumbs": [
       "Data Cleansing",
-      "Project 5"
+      "Project 1"
     ]
   },
   {
-    "objectID": "Cleansing_Projects/project4.html",
-    "href": "Cleansing_Projects/project4.html",
-    "title": "Client Report - [Insert Project Title]",
-    "section": "",
-    "text": "Paste in a template\n\n\n\n\n Back to top",
-    "crumbs": [
-      "Data Cleansing",
-      "Project 4"
-    ]
-  },
-  {
-    "objectID": "Cleansing_Projects/project2.html",
-    "href": "Cleansing_Projects/project2.html",
-    "title": "Client Report - [Insert Project Title]",
-    "section": "",
-    "text": "Paste in a template\n\n\n\n\n Back to top",
-    "crumbs": [
-      "Data Cleansing",
-      "Project 2"
-    ]
-  },
-  {
-    "objectID": "Story_Telling/project3.html",
-    "href": "Story_Telling/project3.html",
+    "objectID": "Story_Telling/project5.html",
+    "href": "Story_Telling/project5.html",
     "title": "Client Report - [Insert Project Title]",
     "section": "",
     "text": "Paste in a template\n\n\n\n\n Back to top",
     "crumbs": [
       "Story Telling",
-      "Project 3"
+      "Project 5"
     ]
   },
   {
-    "objectID": "Story_Telling/project1.html",
-    "href": "Story_Telling/project1.html",
+    "objectID": "Story_Telling/project4.html",
+    "href": "Story_Telling/project4.html",
     "title": "Client Report - [Insert Project Title]",
     "section": "",
     "text": "Paste in a template\n\n\n\n\n Back to top",
     "crumbs": [
       "Story Telling",
+      "Project 4"
+    ]
+  },
+  {
+    "objectID": "Story_Telling/project2.html",
+    "href": "Story_Telling/project2.html",
+    "title": "Client Report - [Insert Project Title]",
+    "section": "",
+    "text": "Paste in a template\n\n\n\n\n Back to top",
+    "crumbs": [
+      "Story Telling",
+      "Project 2"
+    ]
+  },
+  {
+    "objectID": "Full_Stack/project3.html",
+    "href": "Full_Stack/project3.html",
+    "title": "Client Report - [Insert Project Title]",
+    "section": "",
+    "text": "Paste in a template\n\n\n\n\n Back to top",
+    "crumbs": [
+      "Full Stack",
+      "Project 3"
+    ]
+  },
+  {
+    "objectID": "Full_Stack/project1.html",
+    "href": "Full_Stack/project1.html",
+    "title": "Client Report - [Insert Project Title]",
+    "section": "",
+    "text": "Paste in a template\n\n\n\n\n Back to top",
+    "crumbs": [
+      "Full Stack",
       "Project 1"
     ]
   },
   {
-    "objectID": "Full_Stack/project5.html",
-    "href": "Full_Stack/project5.html",
-    "title": "Client Report - [Insert Project Title]",
+    "objectID": "index.html",
+    "href": "index.html",
+    "title": "about me",
     "section": "",
-    "text": "Paste in a template\n\n\n\n\n Back to top",
-    "crumbs": [
-      "Full Stack",
-      "Project 5"
-    ]
+    "text": "MarkDown Basics"
   },
   {
-    "objectID": "Full_Stack/project4.html",
-    "href": "Full_Stack/project4.html",
-    "title": "Client Report - [Insert Project Title]",
+    "objectID": "index.html#title-2-header",
+    "href": "index.html#title-2-header",
+    "title": "about me",
     "section": "",
-    "text": "Paste in a template\n\n\n\n\n Back to top",
-    "crumbs": [
-      "Full Stack",
-      "Project 4"
-    ]
+    "text": "MarkDown Basics"
   },
   {
-    "objectID": "Full_Stack/project2.html",
-    "href": "Full_Stack/project2.html",
-    "title": "Client Report - [Insert Project Title]",
-    "section": "",
-    "text": "Paste in a template\n\n\n\n\n Back to top",
-    "crumbs": [
-      "Full Stack",
-      "Project 2"
-    ]
-  },
-  {
-    "objectID": "competition.html",
-    "href": "competition.html",
+    "objectID": "story_telling.html",
+    "href": "story_telling.html",
     "title": "about me",
     "section": "",
     "text": "MarkDown Basics",
     "crumbs": [
-      "Competition"
+      "Story Telling"
     ]
   },
   {
-    "objectID": "competition.html#title-2-header",
-    "href": "competition.html#title-2-header",
+    "objectID": "story_telling.html#title-2-header",
+    "href": "story_telling.html#title-2-header",
     "title": "about me",
     "section": "",
     "text": "MarkDown Basics",
     "crumbs": [
-      "Competition"
+      "Story Telling"
     ]
   },
   {
-    "objectID": "Competition/project5.html",
-    "href": "Competition/project5.html",
+    "objectID": "Competition/project3.html",
+    "href": "Competition/project3.html",
     "title": "Client Report - [Insert Project Title]",
     "section": "",
     "text": "Paste in a template\n\n\n\n\n Back to top",
     "crumbs": [
       "Competition",
-      "Project 5"
+      "Project 3"
     ]
   },
   {
-    "objectID": "Competition/project4.html",
-    "href": "Competition/project4.html",
+    "objectID": "Competition/project1.html",
+    "href": "Competition/project1.html",
     "title": "Client Report - [Insert Project Title]",
     "section": "",
     "text": "Paste in a template\n\n\n\n\n Back to top",
     "crumbs": [
       "Competition",
-      "Project 4"
+      "Project 1"
     ]
   },
   {
-    "objectID": "Competition/project2.html",
-    "href": "Competition/project2.html",
-    "title": "Client Report - [Insert Project Title]",
+    "objectID": "full_stack.html",
+    "href": "full_stack.html",
+    "title": "about me",
     "section": "",
-    "text": "Paste in a template\n\n\n\n\n Back to top",
+    "text": "MarkDown Basics",
     "crumbs": [
-      "Competition",
-      "Project 2"
+      "Full Stack"
+    ]
+  },
+  {
+    "objectID": "full_stack.html#title-2-header",
+    "href": "full_stack.html#title-2-header",
+    "title": "about me",
+    "section": "",
+    "text": "MarkDown Basics",
+    "crumbs": [
+      "Full Stack"
     ]
   },
   {
